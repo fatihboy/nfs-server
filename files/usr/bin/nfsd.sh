@@ -38,6 +38,27 @@ for fd in "${!SHARED_DIRECTORY_@}"; do
     fi
 done
 
+# Cecking if the ownership of the directory needs to be changed
+if [ -z "${DIRECTORY_UID}" ]; then
+  echo "The UID environment variable is unset or null, doing nothing"
+else
+  if [ -z "${DIRECTORY_GID}" ]; then
+      echo "Changing user ownership of the SHARED_DIRECTORY to $DIRECTORY_UID:$DIRECTORY_UID (found no $DIRECTORY_GID env value)"
+      /bin/chown ${DIRECTORY_UID}:${DIRECTORY_UID} ${SHARED_DIRECTORY}
+  else
+    echo "Changing user ownership of the SHARED_DIRECTORY to $DIRECTORY_UID:$DIRECTORY_GID"
+    /bin/chown ${DIRECTORY_UID}:${DIRECTORY_GID} ${SHARED_DIRECTORY}
+  fi
+fi
+
+# Setting the correct permissions for the shared directory
+if [ -z "${DIRECTORY_PERMISSIONS}" ]; then
+  echo "The DIRECTORY_PERMISSIONS environment variable is unset or null, doing nothing"
+else
+  echo "Changing permissions of the SHARED_DIRECTORY"
+  /bin/chmod ${DIRECTORY_PERMISSIONS} ${SHARED_DIRECTORY}
+fi
+
 # Check if the PERMITTED variable is empty
 if [ -z "${PERMITTED}" ]; then
   echo "The PERMITTED environment variable is unset or null, defaulting to '*'."
