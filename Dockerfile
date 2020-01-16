@@ -1,6 +1,6 @@
 FROM alpine:latest
 LABEL maintainer "Steven Iveson <steve@iveson.eu>, Fatih Boy <fatih@enterprisecoding.com>"
-LABEL source "https://github.com/fatihboy/nfs-server-alpine"
+LABEL source "https://github.com/fatihboy/nfs-server"
 LABEL branch "master"
 
 WORKDIR /
