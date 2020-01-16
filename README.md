@@ -37,7 +37,7 @@ For previous tag 4;
 
 When run, this container will make whatever directory is specified by the environment variable SHARED_DIRECTORY available to NFS v4 clients.
 
-`docker run -d --name nfs --privileged -v /some/where/fileshare:/nfsshare -e SHARED_DIRECTORY=/nfsshare itsthenetwork/nfs-server-alpine:latest`
+`docker run -d --name nfs --privileged -v /some/where/fileshare:/nfsshare -e SHARED_DIRECTORY=/nfsshare enterprisecodingcom/nfs-server:latest`
 
 Add `--net=host` or `-p 2049:2049` to make the shares externally accessible via the host networking stack. This isn't necessary if using [Rancher](https://rancher.com/) or linking containers in some other way.
 
@@ -171,7 +171,7 @@ This image can be used to export and share multiple directories with a little mo
 
 To share multiple directories you'll need to mount additional volumes and specify additional environment variables in your docker run command. Here's an example:
 ```
-docker run -d --name nfs --privileged -v /some/where/fileshare:/nfsshare -v /some/where/else:/nfsshare/another -e SHARED_DIRECTORY=/nfsshare -e SHARED_DIRECTORY_2=/nfsshare/another itsthenetwork/nfs-server-alpine:latest
+docker run -d --name nfs --privileged -v /some/where/fileshare:/nfsshare -v /some/where/else:/nfsshare/another -e SHARED_DIRECTORY=/nfsshare -e SHARED_DIRECTORY_2=/nfsshare/another enterprisecodingcom/nfs-server:latest
 ```
 
 You should then modify the **nfsd.sh** file to process the extra environment variables and add entries to the exports file. I've already included a working example to get you started:
