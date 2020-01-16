@@ -71,6 +71,28 @@ else
   /bin/sed -i "s/{{SYNC}}/sync/g" /etc/exports
 fi
 
+# use GRACE_TIME variable if avaliable
+if [ -z ${GRACE_TIME+y} ]; then
+  echo "GRACE_TIME variable is unset"
+  GRACE_TIME_ARG=""
+else
+  echo "GRACE_TIME variable is set to ${GRACE_TIME}"
+  GRACE_TIME_ARG="-G ${GRACE_TIME}"
+fi
+
+echo "Grace time argument = ${GRACE_TIME_ARG}"
+
+# use LEASE_TIME variable if avaliable
+if [ -z ${LEASE_TIME+y} ]; then
+  echo "LEASE_TIME variable is unset"
+  LEASE_TIME_ARG=""
+else
+  echo "LEASE_TIME variable is set to ${GRACE_TIME}"
+  LEASE_TIME_ARG="-L ${LEASE_TIME}"
+fi
+
+echo "Lease time argument = ${LEASE_TIME_ARG}"
+
 # Partially set 'unofficial Bash Strict Mode' as described here: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 # We don't set -e because the pidof command returns an exit code of 1 when the specified process is not found
 # We expect this at times and don't want the script to be terminated when it occurs
@@ -102,7 +124,7 @@ while true; do
     # /usr/sbin/rpc.statd
 
     echo "Starting NFS in the background..."
-    /usr/sbin/rpc.nfsd --debug 8 --no-udp --no-nfs-version 2 --no-nfs-version 3
+    /usr/sbin/rpc.nfsd --debug 8 --no-udp --no-nfs-version 2 --no-nfs-version 3 ${GRACE_TIME_ARG} ${LEASE_TIME_ARG}
     echo "Exporting File System..."
     if /usr/sbin/exportfs -rv; then
       /usr/sbin/exportfs
