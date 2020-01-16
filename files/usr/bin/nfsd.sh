@@ -29,17 +29,14 @@ else
   /bin/sed -i "s@{{SHARED_DIRECTORY}}@${SHARED_DIRECTORY}@g" /etc/exports
 fi
 
-# This is here to demonsrate how multiple directories can be shared. You
-# would need a block like this for each extra share.
-# Any additional shares MUST be subdirectories of the root directory specified
-# by SHARED_DIRECTORY.
-
-# Check if the SHARED_DIRECTORY_2 variable is empty
-if [ ! -z "${SHARED_DIRECTORY_2}" ]; then
-  echo "Writing SHARED_DIRECTORY_2 to /etc/exports file"
-  echo "{{SHARED_DIRECTORY_2}} {{PERMITTED}}({{READ_ONLY}},{{SYNC}},no_subtree_check,no_auth_nlm,insecure,no_root_squash)" >> /etc/exports
-  /bin/sed -i "s@{{SHARED_DIRECTORY_2}}@${SHARED_DIRECTORY_2}@g" /etc/exports
-fi
+# Added multiple shared directories
+for fd in "${!SHARED_DIRECTORY_@}"; do
+    if [[ ! -z "${fd}" ]]; then
+        echo "Writing ${!fd} directory to /etc/exports file"
+        echo "{{SHARED_DIRECTORY_REP}} {{PERMITTED}}({{READ_ONLY}},{{SYNC}},no_subtree_check,no_auth_nlm,insecure,no_root_squash)" >> /etc/exports
+        /bin/sed -i "s@{{SHARED_DIRECTORY_REP}}@${!fd}@g" /etc/exports
+    fi
+done
 
 # Check if the PERMITTED variable is empty
 if [ -z "${PERMITTED}" ]; then
